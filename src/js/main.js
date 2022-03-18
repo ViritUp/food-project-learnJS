@@ -88,7 +88,6 @@ window.addEventListener('DOMContentLoaded' , () => {
 
     const modal = document.querySelector('.modal');
     const btnOpenModal = document.querySelectorAll('[data-modal]');
-    const btnCloseModal = document.querySelector('[data-close]');
 
     btnOpenModal.forEach(openBtn => {
         openBtn.addEventListener('click', (e) => {
@@ -97,13 +96,8 @@ window.addEventListener('DOMContentLoaded' , () => {
         });
     });
 
-    btnCloseModal.addEventListener('click', (e) => {
-        e.preventDefault();
-        closeModal();
-    });
-
     modal.addEventListener('click', e => {
-        if(e.target && e.target === modal) {
+        if(e.target && e.target === modal || e.target.getAttribute('data-close') == '') {
             closeModal();
         }
     });
@@ -119,7 +113,7 @@ window.addEventListener('DOMContentLoaded' , () => {
         modal.classList.remove('hide');
         modal.classList.add('show');
         document.body.style.overflow = 'hidden';
-        /* clearInterval(modalTimerId); */
+        clearInterval(modalTimerId);
     }
 
     function closeModal() {
@@ -129,7 +123,7 @@ window.addEventListener('DOMContentLoaded' , () => {
     }
 
 
-    /* const modalTimerId = setTimeout(showModal, 5000); */
+    const modalTimerId = setTimeout(showModal, 50000);
 
     function showModalByScroll() {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
@@ -198,7 +192,7 @@ window.addEventListener('DOMContentLoaded' , () => {
     const forms = document.querySelectorAll('form');
 
     const message = {
-        loading: 'Loading...',
+        loading: 'img/form/spinner.svg',
         success: 'Thank you, we will contact you soon!',
         failure: 'Something wrong!'
     };
@@ -211,10 +205,14 @@ window.addEventListener('DOMContentLoaded' , () => {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const statusMessage = document.createElement('div');
-            statusMessage.classList.add('status');
-            statusMessage.textContent = message.loading;
-            form.append(statusMessage);
+            const statusMessage = document.createElement('img');
+            statusMessage.src = message.loading;
+            statusMessage.style.cssText = `
+                display: block;
+                margin: 0 auto;
+            `;
+            /* form.append(statusMessage); */
+            form.insertAdjacentElement('afterend', statusMessage);
 
             const r = new XMLHttpRequest();
             r.open('POST', 'server.php');
@@ -234,15 +232,41 @@ window.addEventListener('DOMContentLoaded' , () => {
             r.addEventListener('load', () => {
                 if(r.status === 200) {
                     console.log(r.response);
-                    statusMessage.textContent = message.success;
+                    showThanksModal(message.success);
                     form.reset();
-                    setTimeout((() => statusMessage.remove()), 2000);
+                    statusMessage.remove();
                 } else {
-                    statusMessage.textContent = message.failure;
+                    showThanksModal(message.failure);
                 }
             });
         });
     }
+
+    function showThanksModal(message) {
+        const prevModalDialog = document.querySelector('.modal__dialog');
+
+        prevModalDialog.classList.add('hide');
+        showModal();
+
+        const thanksModal = document.createElement('div');
+        thanksModal.classList.add('modal__dialog');
+        thanksModal.innerHTML = `
+            <div class="modal__content">
+                <div class="modal__close" data-close>&times;</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
+
+        document.querySelector('.modal').append(thanksModal);
+
+        setTimeout(() => {
+            thanksModal.remove();
+            prevModalDialog.classList.add('show');
+            prevModalDialog.classList.remove('hide');
+            closeModal();
+        }, 4000);
+    }
+
 
     // FORMS ends
     
