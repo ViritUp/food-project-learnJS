@@ -91,7 +91,10 @@
   !*** ./src/js/main.js ***!
   \************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 window.addEventListener('DOMContentLoaded', () => {
   // TABS starts
@@ -203,7 +206,7 @@ window.addEventListener('DOMContentLoaded', () => {
     modal.classList.remove('hide');
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
-    clearInterval(modalTimerId);
+    /* clearInterval(modalTimerId); */
   }
 
   function closeModal() {
@@ -269,6 +272,48 @@ window.addEventListener('DOMContentLoaded', () => {
   new MenuCard('img/tabs/vegy.jpg', 'vegy', 'Меню "Фитнес"', 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!', 13, '.menu .container', 'menu__item').render();
   new MenuCard('img/tabs/elite.jpg', 'elite', 'Меню “Премиум”', 'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', 18, '.menu .container', 'menu__item').render();
   new MenuCard('img/tabs/post.jpg', 'post', 'Меню "Постное"', 'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.', 21, '.menu .container', 'menu__item').render(); //CARDS ends
+  // FORMS starts
+
+  const forms = document.querySelectorAll('form');
+  const message = {
+    loading: 'Loading...',
+    success: 'Thank you, we will contact you soon!',
+    failure: 'Something wrong!'
+  };
+  forms.forEach(item => {
+    postData(item);
+  });
+
+  function postData(form) {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const statusMessage = document.createElement('div');
+      statusMessage.classList.add('status');
+      statusMessage.textContent = message.loading;
+      form.append(statusMessage);
+      const r = new XMLHttpRequest();
+      r.open('POST', 'server.php');
+      r.setRequestHeader('Content-type', 'application/json');
+      const formData = new FormData(form);
+      const object = {};
+      formData.forEach((value, key) => {
+        object[key] = value;
+      });
+      const json = JSON.stringify(object);
+      r.send(json);
+      r.addEventListener('load', () => {
+        if (r.status === 200) {
+          console.log(r.response);
+          statusMessage.textContent = message.success;
+          form.reset();
+          setTimeout(() => statusMessage.remove(), 2000);
+        } else {
+          statusMessage.textContent = message.failure;
+        }
+      });
+    });
+  } // FORMS ends
+
 });
 
 /***/ })

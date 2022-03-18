@@ -1,3 +1,5 @@
+'use strict';
+
 window.addEventListener('DOMContentLoaded' , () => {
 
     // TABS starts
@@ -117,7 +119,7 @@ window.addEventListener('DOMContentLoaded' , () => {
         modal.classList.remove('hide');
         modal.classList.add('show');
         document.body.style.overflow = 'hidden';
-        clearInterval(modalTimerId);
+        /* clearInterval(modalTimerId); */
     }
 
     function closeModal() {
@@ -190,6 +192,59 @@ window.addEventListener('DOMContentLoaded' , () => {
 
 
     //CARDS ends
+
+    // FORMS starts
+
+    const forms = document.querySelectorAll('form');
+
+    const message = {
+        loading: 'Loading...',
+        success: 'Thank you, we will contact you soon!',
+        failure: 'Something wrong!'
+    };
+
+    forms.forEach(item => {
+        postData(item);
+    });
+
+    function postData(form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const statusMessage = document.createElement('div');
+            statusMessage.classList.add('status');
+            statusMessage.textContent = message.loading;
+            form.append(statusMessage);
+
+            const r = new XMLHttpRequest();
+            r.open('POST', 'server.php');
+           
+            r.setRequestHeader('Content-type', 'application/json');
+            const formData = new FormData(form); 
+
+            const object = {};
+            formData.forEach((value, key) => {
+                object[key] = value;
+            });
+
+            const json = JSON.stringify(object);
+
+            r.send(json);
+
+            r.addEventListener('load', () => {
+                if(r.status === 200) {
+                    console.log(r.response);
+                    statusMessage.textContent = message.success;
+                    form.reset();
+                    setTimeout((() => statusMessage.remove()), 2000);
+                } else {
+                    statusMessage.textContent = message.failure;
+                }
+            });
+        });
+    }
+
+    // FORMS ends
     
 
 });
