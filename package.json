@@ -1,7 +1,6 @@
 {
   "name": "food",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,9 +24,19 @@
     "gulp-sass": "^4.0.2",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
-    "webpack-stream": "^5.2.1"
+    "webpack-stream": "^5.2.1",
+    "json-server": "^0.17.0"
   },
   "dependencies": {
     "core-js": "^3.21.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ViritUp/food-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ViritUp/food-js/issues"
+  },
+  "homepage": "https://github.com/ViritUp/food-js#readme",
+  "description": ""
 }
