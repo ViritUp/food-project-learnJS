@@ -8,15 +8,13 @@
   "author": "",
   "license": "ISC",
   "browserslist": [
-    "last 2 chrome versions",
-    "last 2 firefox versions",
-    "last 2 ios versions"
+    ">1%"
   ],
   "devDependencies": {
-    "@babel/core": "^7.7.0",
-    "@babel/preset-env": "^7.7.1",
+    "@babel/core": "^7.17.8",
+    "@babel/preset-env": "^7.16.11",
     "autoprefixer": "^9.7.1",
-    "babel-loader": "^8.0.6",
+    "babel-loader": "^8.2.4",
     "browser-sync": "^2.26.7",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.2.0",
@@ -28,6 +26,8 @@
     "webpack-stream": "^5.2.1"
   },
   "dependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/polyfill": "^7.12.1",
     "core-js": "^3.21.1"
   },
   "repository": {

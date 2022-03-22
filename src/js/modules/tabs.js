@@ -1,14 +1,14 @@
-function tabs() {
-    const tabHeaderTitles = document.querySelectorAll('.tabheader__items .tabheader__item');
-    const tabHeaderItem = document.querySelectorAll('.tabcontent') ;
+function tabs(tabsSelector, tabsContentSelector, activeClass) {
+    const tabHeaderTitles = document.querySelectorAll(tabsSelector);
+    const tabHeaderItem = document.querySelectorAll(tabsContentSelector) ;
 
     tabHeaderTitles.forEach((item, i) => {       //берем каждое загалвие
         item.addEventListener('click', e => {  // добавляем событие клика на него
             e.preventDefault();                  // убираем стандартные действия
             tabHeaderTitles.forEach(name => {      // проходимся по всем заглавиям и убираем класс tabheader__item_active если он есть у кого-то
-                name.classList.remove('tabheader__item_active');
+                name.classList.remove(activeClass);
             });
-            item.classList.add('tabheader__item_active');   // добавляем элементу на который нажали класс tabheader__item_active
+            item.classList.add(activeClass);   // добавляем элементу на который нажали класс tabheader__item_active
             tabHeaderItem.forEach((item, index) => {   // проходимся по массиву контентов табов
                 item.classList.remove('show' , 'fade');   // убираем у всех класс показа
                 item.classList.add('hide');        // добавляем класс скрытия
@@ -21,4 +21,4 @@ function tabs() {
     });
 }
 
-module.exports = tabs;
+export default tabs;
